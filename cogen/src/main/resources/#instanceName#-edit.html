@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta name="description" content="form wizard" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="../../assets/img/favicon.png" type="image/x-icon">
+<link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="../../assets/css/beyond.min.css" rel="stylesheet" />
+<link href="../../assets/css/typicons.min.css" rel="stylesheet" />
+<link href="../../assets/css/animate.min.css" rel="stylesheet" />
+<link href="../../assets/css/demo.min.css" rel="stylesheet" />
+<link id="skin-link" href="" rel="stylesheet" type="text/css" />
+<script src="../../js/common.js"></script>
+<style type="text/css">
+body{
+	font-family: "微软雅黑";
+}
+.label-title{
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 14px;
+}
+</style>
+</head>
+<body>
+	<div class="main-container container-fluid">
+		<div class="page-container">
+			<div class="row" style="height: 68px;margin-bottom: 10px;">
+				<div class="col-lg-12 col-sm-12 col-xs-12" style="height: 68px">
+					<div class="well" style="height: 68px;margin-bottom: 0px;">
+                        <div class="buttons-preview">
+                            <button class="btn btn-info" onclick='javascript:history.go(-1)'>返回</button>
+                        </div>
+                    </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 col-xs-12">
+					<div class="well with-header" style="padding-bottom: 10px;margin-bottom: 10px;">
+						<div class="header bordered-blue">
+                            编辑
+                        </div>
+                        <div class="row">
+						<form role="form" class="form-horizontal" id="data_form">
+						<input type="hidden" name="#instanceName#.id" id="#instanceName#_id">
+<!--form_group-->
+						</form>
+						</div>
+						<hr/>
+						<div class="row">
+							<div class='col-sm-6' >
+								<a class="btn btn-purple" onclick="edit()" style='float: right;'>提交</a>
+							</div>
+							<div class='col-sm-6'>
+								<a class="btn btn-warning" onclick="reset()" style='float:left;' >重置</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<!--ref_element_list-->
+		</div>
+	</div>
+<!--ref_model-->
+	<script src="../../assets/js/jquery-2.0.3.min.js"></script>
+	<script src="../../assets/js/bootstrap.min.js"></script>
+	<script src="../../assets/js/beyond.min.js"></script>
+	<script src="../../assets/js/fuelux/wizard/wizard-custom.js"></script>
+	<script src="../../assets/js/toastr/toastr.js"></script>
+	<script src='../../assets/js/bootbox/bootbox.js'></script>
+<!--ref_js-->
+	<script>
+		$(function() {
+			spreadCookie();
+			buildInput();
+			initInput();
+			initRefInput();
+			fillData(getParams());
+			initRefList();
+		});
+		
+		function edit(){
+			$.ajax({
+        	    type: 'put',
+        	    url: '#editUrl#',
+        	    data: groupParams($("#data_form").serializeArray()),
+        	    success: function(result) {
+        	    	if(result.code=="0"){
+        	    		Notify(result.message + "，3秒后自动跳转到列表页面...", 'top-right', '5000', 'green', 'fa-ok', true);
+        	    		setTimeout("toList()",3000);
+        	    	}else{
+        	    		Notify(result.message, 'top-right', '5000', 'yellow', 'fa-check', true);
+        	    	}
+        	    }
+        	});
+		}
+		
+		function sure(iframeId,itemName){
+        	var result = document.getElementById(iframeId+"_iframe").contentWindow.returnIds();
+        	$("#"+iframeId+"_span").html("");
+        	if(result.length>0){
+        		var items = result.split("||");
+        		for(var i=0;i<items.length;i++){
+        			var id = items[i].split("$$")[0];
+        			var name = items[i].split("$$")[1];
+        			if($("#"+iframeId+"_"+id).val()==null){
+	        			var a = "<span><a href=\"#this\" id='"+iframeId+"_"+id + 
+	        				"' onclick=\"removeItem(this)\" data-toggle=\"modal\"><i class=\"glyphicon glyphicon-remove danger\"></i></a>" +
+	        				"<input type='hidden' name='"+itemName+"' value='"+id+"' class='"+items[i]+"'/>"+
+	        				"&nbsp;&nbsp;"+name + "</span>";
+	        			$("#"+iframeId+"_span").append(a);
+	        		}
+        		}
+        	}
+        	$("#"+iframeId+"_close").click();
+        }
+		
+		function toList(){
+			redirect('#listPageUrl#',{});
+		}
+		
+		function reset(){
+			$("#data_form")[0].reset();
+		}
+
+		//初始化控件，datapicker,select,timepicker,treepicker...
+		function buildInput() {
+<!--build_js-->
+		}
+
+		//填充select,radio,checkbox的可选数据
+		function initInput() {
+<!--init_js-->
+		}
+		
+		function initRefInput(){
+<!--init_ref_js-->		
+		}
+		
+		function initRefList(){
+			var instanceId = $("##instanceName#_id").val();
+<!--init_ref_list_js-->
+		}
+		
+		//填充input的实际数据
+		function fillData(params){
+			$.ajax({
+        	    type: 'get',
+        	    url: '#viewUrl#',
+        	    data: params,
+        	    success: function(result) {
+        	    	var data = result.data;
+        	    	if(result.code=="0"){
+        	    		$("##instanceName#_id").val(data.id);
+<!--fill_data_js-->	
+        	    	}else{
+        	    		Notify(result.message, 'top-right', '5000', 'yellow', 'fa-check', true);
+        	    	}
+        	    },
+        	    async:false
+        	});
+		}
+		
+        function removeItem(obj){
+        	$(obj).parent().remove();
+        }
+	</script>
+</body>
+</html>

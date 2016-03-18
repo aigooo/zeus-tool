@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="description" content="form wizard" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="../../assets/img/favicon.png" type="image/x-icon">
+<link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="../../assets/css/beyond.min.css" rel="stylesheet" />
+<link href="../../assets/css/typicons.min.css" rel="stylesheet" />
+<link href="../../assets/css/animate.min.css" rel="stylesheet" />
+<link href="../../assets/css/demo.min.css" rel="stylesheet" />
+<link id="skin-link" href="" rel="stylesheet" type="text/css" />
+<script src="../../js/common.js"></script>
+<style type="text/css">
+body {
+	font-family: "微软雅黑";
+}
+.ref-link{
+	border:none!important;
+	background:transparent none!important;
+	color:#08c!important;
+	text-shadow:none!important;
+	line-height:20px!important;
+	box-shadow:none!important;
+	padding-left: 0;
+	padding-right: 10px;
+}
+.label-title {
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 14px;
+}
+
+.table-title {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 14px;
+}
+
+.big-font{
+	font-size: 14px;
+	line-height: 14px;
+}
+</style>
+</head>
+<body>
+	<div class="main-container container-fluid">
+		<div class="page-container">
+			<div class="row" style="margin-bottom: 10px;">
+				<div class="col-lg-12 col-sm-12 col-xs-12" style="height: auto">
+					<div class="well" style="margin-bottom: 0px;height: auto;padding-top:15px;padding-bottom:0px;">
+						<form role="form" class="form-horizontal" id="data_form">
+						<input id="page_nbr" name="page.pageNbr" value="1" type="hidden">
+						<table style="width: 100%">
+<!--tr_4_filter-->
+				        </table>
+						</form>
+                    </div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 col-xs-12">
+					<div class="well">
+						<table class="table table-hover big-font table-striped">
+							<thead class="bordered-darkorange">
+								<tr>
+<!--th-->
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody id="#instanceName#-data" >
+							</tbody>
+							<tfoot style="background-color: #f5f5f5">
+								<tr>
+									<td colspan="100" style="text-align: center;">
+										<span class="btn-group" id="page_btn">
+                                        </span>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="view_modal" style='display: none;'><iframe id='view_iframe' frameborder='no' src='' style='width: 100%; height: 500px;'></iframe></div>
+<!--ref_model-->
+	<script src="../../assets/js/jquery-2.0.3.min.js"></script>
+	<script src="../../assets/js/bootstrap.min.js"></script>
+	<script src="../../assets/js/beyond.min.js"></script>
+	<script src="../../assets/js/fuelux/wizard/wizard-custom.js"></script>
+	<script src="../../assets/js/toastr/toastr.js"></script>
+	<script src='../../assets/js/bootbox/bootbox.js'></script>
+<!--ref_js-->
+	<script type="text/javascript">
+		$(function() {
+			spreadCookie();
+			loadData({});
+			buildInput();
+			initInput();
+			initRefInput();
+		});
+		
+		//TODO 增加一些hidden字段
+		
+		function page(obj){
+			if(obj==-1){
+				filter($("#page_nbr").val()-1);
+			}else if(obj==0){
+				filter(1+parseInt($("#page_nbr").val()));
+			}else{
+				filter(obj);
+			}
+		}
+        
+        function loadData(params){
+        	$.ajax({
+				url: '#pageUrl#',
+				type: 'get',
+				data: params,
+				success: function(result) {
+					if(result.code=="0"){
+						fillData(result);
+        	    	}else{
+        	    		Notify(result.message, 'top-right', '5000', 'darkorange', 'fa-check', true);
+        	    	}
+				}
+        	});
+        }
+        
+        function fillData(result){
+        	$("##instanceName#-data").html(""); //清除内容
+        	$("#page_btn").html(""); //清除内容
+        	if(result.data!=null&&result.data.list!=null&&result.data.list.length>0){
+        		var list = result.data.list;
+            	var pageCount = result.data.pageCount;
+            	var pageNbr = result.data.pageNbr;
+            	$("#page_nbr").val(pageNbr);
+            	for(var i=0;i<list.length;i++){
+/*tr_js*/
+            	}
+            	$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page(1);" id="btn_first">&lt;&lt;</a>');
+            	$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page(-1);" id="btn_pre">&lt;</a>');
+            	if(pageCount<5){
+            		for(var i=1;i<=pageCount;i++){
+            			if(i!=pageNbr)
+            				$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+i+');">'+i+'</a>');
+            			else
+            				$("#page_btn").append('<a class="btn btn-info btn-lg" href="javascript:page('+i+');">'+i+'</a>');
+            		}
+            	}else{
+            		if(pageNbr>2&&pageCount-pageNbr>=2){
+	            		$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+(pageNbr-2)+');">'+(pageNbr-2)+'</a>');
+	            		$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+(pageNbr-1)+');">'+(pageNbr-1)+'</a>');
+	            		$("#page_btn").append('<a class="btn btn btn-info btn-lg" href="javascript:page('+(pageNbr)+');">'+(pageNbr)+'</a>');
+	            		$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+(pageNbr+1)+');">'+(pageNbr+1)+'</a>');
+	            		$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+(pageNbr+2)+');">'+(pageNbr+2)+'</a>');
+            		}else if(pageNbr<=2){
+            			for(var i=1;i<=5;i++){
+                			if(i!=pageNbr)
+                				$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+i+');">'+i+'</a>');
+                			else
+                				$("#page_btn").append('<a class="btn btn-info btn-lg" href="javascript:page('+i+');">'+i+'</a>');
+                		}
+            		}else if(pageCount-pageNbr<2){
+            			for(var i=pageCount-4;i<=pageCount;i++){
+                			if(i!=pageNbr)
+                				$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+i+');">'+i+'</a>');
+                			else
+                				$("#page_btn").append('<a class="btn btn-info btn-lg" href="javascript:page('+i+');">'+i+'</a>');
+                		}
+            		}
+            	}
+            	$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page(0);" id="btn_nxt">&gt;</a>');
+            	$("#page_btn").append('<a class="btn btn-default blue btn-lg" href="javascript:page('+pageCount+');" id="btn_last">&gt;&gt;</a>');
+            	
+            	if(pageNbr==1){
+            		$("#btn_pre").hide();
+            		$("#btn_first").hide();
+            	}else{
+            		$("#btn_pre").show();
+            		$("#btn_first").show();
+            	}
+            	
+            	if(pageNbr==pageCount){
+            		$("#btn_nxt").hide();
+            		$("#btn_last").hide();
+            	}else{
+            		$("#btn_nxt").show();
+            		$("#btn_last").show();
+            	}
+        	}else{
+        		$("##instanceName#-data").html("<tr><td colspan='100'>当前无数据可显示</td></tr>"); //清除内容
+        	}
+        }
+        
+        function view(url){
+   			$('#view_iframe').attr('src',url);			
+   			bootbox.dialog({ 
+   				message: $("#view_modal").html(), 
+   				title: "查看详情", 
+   				className: "modal-darkorange", 
+   				buttons: { 
+   					success: { 
+   						label: "确定", 
+   						className: "btn-blue", 
+   						callback: function () { } 
+   					}
+   				}
+   			});
+        }
+        
+        //查询
+        function filter(pageNbr){
+        	$("#page_nbr").val(pageNbr);
+        	loadData(groupParams($("#data_form").serializeArray()));
+        }
+        
+        //删除
+        function remove(params){
+        	$.ajax({
+				url: '#removeUrl#',
+				type: 'delete',
+				data: params,
+				success: function(result) {
+					if(result.code=="0"){
+        	    		Notify(result.message, 'top-right', '5000', 'green', 'fa-check', true);
+        	    	}else{
+        	    		Notify(result.message, 'top-right', '5000', 'yellow', 'fa-check', true);
+        	    	}
+					loadData();
+				}
+        	});
+        }
+        
+		//初始化控件，datapicker,select,timepicker,treepicker...
+		function buildInput() {
+<!--build_js-->
+		}
+
+		//填充select,radio,checkbox的可选数据
+		function initInput() {
+<!--init_js-->
+		}
+		
+		function initRefInput(){
+<!--init_ref_js-->		
+		}
+    </script>
+</body>
+</html>

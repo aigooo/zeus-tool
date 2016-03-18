@@ -1,0 +1,8 @@
+package #package#.dao;
+
+import com.zeus.persist.hibernate.HibernateBaseDao;
+import #package#.entity.#clazzName#;
+
+public interface #clazzName#Dao extends HibernateBaseDao<#clazzName#,#idType#>{
+
+}

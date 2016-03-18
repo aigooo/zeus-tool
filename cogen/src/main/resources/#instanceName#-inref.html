@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>创建红包</title>
+<meta name="description" content="form wizard" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="../../assets/img/favicon.png" type="image/x-icon">
+<link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../../assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="../../assets/css/beyond.min.css" rel="stylesheet" />
+<link href="../../assets/css/typicons.min.css" rel="stylesheet" />
+<link href="../../assets/css/animate.min.css" rel="stylesheet" />
+<link href="../../assets/css/demo.min.css" rel="stylesheet" />
+<link id="skin-link" href="" rel="stylesheet" type="text/css" />
+<script src="../../js/common.js"></script>
+<style type="text/css">
+body {
+	font-family: "微软雅黑";
+}
+.ref-link{
+	border:none!important;
+	background:transparent none!important;
+	color:#08c!important;
+	text-shadow:none!important;
+	line-height:20px!important;
+	box-shadow:none!important;
+	padding-left: 0;
+	padding-right: 10px;
+}
+.label-title {
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 14px;
+}
+
+.table-title {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 14px;
+}
+
+.big-font{
+	font-size: 14px;
+	line-height: 14px;
+}
+</style>
+<script src="../../assets/js/skins.min.js"></script>
+</head>
+<body>
+	<div class="main-container container-fluid">
+		<table class="table table-hover big-font table-striped">
+			<thead class="bordered-darkorange">
+				<tr>
+<!--th-->
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="#instanceName#-data" >
+			</tbody>
+		</table>
+	</div>
+	<div id="view_modal" style='display: none;'><iframe id='view_iframe' frameborder='no' src='' style='width: 100%; height: 500px;'></iframe></div>
+<!--ref_model-->
+	<script src="../../assets/js/jquery-2.0.3.min.js"></script>
+	<script src="../../assets/js/bootstrap.min.js"></script>
+	<script src="../../assets/js/beyond.min.js"></script>
+	<script src="../../assets/js/fuelux/wizard/wizard-custom.js"></script>
+	<script src="../../assets/js/toastr/toastr.js"></script>
+	<script src='../../assets/js/bootbox/bootbox.js'></script>
+<!--ref_js-->
+	<script type="text/javascript">
+		var instanceName = GetQueryString("instanceName");
+		var instanceIdKey =  instanceName + ".id";
+		var instanceId = GetQueryString(instanceIdKey);
+		var fieldName = GetQueryString("fieldName");
+		
+		$(function() {
+			spreadCookie();
+			loadData({});
+			buildInput();
+			initInput();
+			initRefInput();
+		});
+		
+		function GetQueryString(name){
+		     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		     var r = window.location.search.substr(1).match(reg);
+		     if(r!=null)return  unescape(r[2]); return null;
+		}
+        
+		function redirect(url){
+			window.location.href = url;
+		}
+        function loadData(params){
+        	params[instanceIdKey] = instanceId;
+        	params['prop']=fieldName;
+        	$.ajax({
+				url: '/' + instanceName + '/flist',
+				type: 'get',
+				data: params,
+				success: function(result) {
+					if(result.code=="0"){
+						fillData(result);
+        	    	}else{
+        	    		Notify(result.message, 'top-right', '5000', 'darkorange', 'fa-check', true);
+        	    	}
+				},
+				async:false
+        	});
+        }
+        
+        function fillData(result){
+        	$("##instanceName#-data").html(""); //清除内容
+        	if(result.data!=null&&result.data!=null&&result.data.length>0){
+        		var list = result.data;
+            	for(var i=0;i<list.length;i++){
+/*tr_js*/
+            	}
+        	}else{
+        		$("##instanceName#-data").html("<tr><td colspan='100'>当前无数据可显示</td></tr>"); //清除内容
+        	}
+        }
+        
+        function view(url){
+   			$('#view_iframe').attr('src',url);			
+   			bootbox.dialog({ 
+   				message: $("#view_modal").html(), 
+   				title: "查看详情", 
+   				className: "modal-darkorange", 
+   				buttons: { 
+   					success: { 
+   						label: "确定", 
+   						className: "btn-blue", 
+   						callback: function () { } 
+   					}
+   				}
+   			});
+        }
+        
+        //查询
+        function filter(pageNbr){
+        	$("#page_nbr").val(pageNbr);
+        	loadData(groupParams($("#data_form").serializeArray()));
+        }
+        
+        //删除
+        function remove(params){
+        	$.ajax({
+				url: '#removeUrl#',
+				type: 'delete',
+				data: params,
+				success: function(result) {
+					if(result.code=="0"){
+        	    		Notify(result.message, 'top-right', '5000', 'green', 'fa-check', true);
+        	    	}else{
+        	    		Notify(result.message, 'top-right', '5000', 'yellow', 'fa-check', true);
+        	    	}
+					loadData();
+				}
+        	});
+        }
+        
+		//初始化控件，datapicker,select,timepicker,treepicker...
+		function buildInput() {
+<!--build_js-->
+		}
+
+		//填充select,radio,checkbox的可选数据
+		function initInput() {
+<!--init_js-->
+		}
+		
+		function initRefInput(){
+<!--init_ref_js-->		
+		}
+    </script>
+</body>
+</html>

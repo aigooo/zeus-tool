@@ -1,0 +1,10 @@
+package #package#.entity;
+
+//import
+
+public class #clazzName# //implement
+{
+//attribute
+
+//getterAndSetter
+}

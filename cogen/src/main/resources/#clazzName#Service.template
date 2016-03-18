@@ -1,0 +1,11 @@
+package #package#.service;
+
+import #package#.entity.#clazzName#;
+import com.zeus.persist.Aggregate;
+import com.zeus.persist.CRUD;
+
+public interface #clazzName#Service extends CRUD<#clazzName#>,Aggregate<#clazzName#>{
+
+	public #clazzName# getFull#clazzName#(#clazzName# #instanceName#);
+
+}

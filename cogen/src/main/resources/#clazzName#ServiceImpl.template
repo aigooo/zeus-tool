@@ -1,0 +1,33 @@
+package #package#.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zeus.persist.PersistHelper;
+import #package#.entity.#clazzName#;
+import #package#.dao.#clazzName#Dao;
+import #package#.service.#clazzName#Service;
+
+@Service
+public class #clazzName#ServiceImpl extends PersistHelper<#clazzName#,#idType#> implements #clazzName#Service{
+
+    #clazzName#Dao #instanceName#Dao;
+
+    public #clazzName#Dao get#clazzName#Dao() {
+        return #instanceName#Dao;
+    }
+
+	@Autowired
+    public void set#clazzName#Dao(#clazzName#Dao #instanceName#Dao) {
+        this.#instanceName#Dao = #instanceName#Dao;
+        setBaseDao(#instanceName#Dao);
+    }
+    
+    @Override
+	public #clazzName# getFull#clazzName#(#clazzName# #instanceName#) {
+		#instanceName# = get(#instanceName#);
+		if(#instanceName#!=null){
+		}
+		return #instanceName#;
+	}
+}

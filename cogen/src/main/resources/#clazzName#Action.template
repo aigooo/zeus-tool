@@ -1,0 +1,124 @@
+package #package#.action;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import io.vertx.core.http.HttpMethod;
+
+import com.zeus.persist.Page;
+import com.zeus.server.RespBody;
+import com.zeus.server.annotation.HTTP;
+import com.zeus.server.annotation.Param;
+import #package#.entity.#clazzName#;
+import #package#.service.#clazzName#Service;
+
+@Controller
+@HTTP(path="/#instanceName#")
+public class #clazzName#Action {
+
+	private static final Logger logger = Logger.getLogger(#clazzName#Action.class);
+	
+	@Autowired
+	#clazzName#Service #instanceName#Service;
+	
+	@HTTP(path="/add",method=HttpMethod.POST)
+	public RespBody<#clazzName#> add(#clazzName# #instanceName#){
+		try{
+			if(#instanceName#==null){
+				return RespBody.fail("请求参数不正确！");
+			}
+			#instanceName#Service.saveOrUpdate(#instanceName#);
+			return RespBody.success("创建成功",#instanceName#);
+		}catch(Exception e){
+			logger.error("保存失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("保存失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+	
+	@HTTP(path="/list",method=HttpMethod.GET)
+	public RespBody<List<#clazzName#>> list#clazzName#(#clazzName# #instanceName#) {
+		try{
+			return RespBody.success((List<#clazzName#>)#instanceName#Service.find(#instanceName#));
+		}catch(Exception e){
+			logger.error("查询失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("查询失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+	
+	@HTTP(path="/flist",method=HttpMethod.GET)
+	public RespBody<Object> flist#clazzName#(#clazzName# #instanceName#,@Param(name="prop") String prop) {
+		try{
+			if(#instanceName#==null||#instanceName#.getId()==null){
+				return RespBody.fail("请求参数不正确！",null);
+			}
+			return RespBody.success(#instanceName#Service.load(#instanceName#,prop));
+		}catch(Exception e){
+			logger.error("查询失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("查询失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+	
+	@HTTP(path="/page",method=HttpMethod.GET)
+	public RespBody<Page<#clazzName#>> page#clazzName#(Page<#clazzName#> page,#clazzName# #instanceName#) {
+		try{
+			if(page==null) page = new Page<>();
+			#instanceName#Service.findPage(#instanceName#, page);
+			return RespBody.success(page);
+		}catch(Exception e){
+			logger.error("查询失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("查询失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+
+	@HTTP(path="/view",method=HttpMethod.GET)
+	public RespBody<#clazzName#> view#clazzName#(#clazzName# #instanceName#) {
+		try{
+			if(#instanceName#==null||#instanceName#.getId()==null){
+				return RespBody.fail("请求参数不正确！");
+			}
+			return RespBody.success(#instanceName#Service.getFull#clazzName#(#instanceName#));
+		}catch(Exception e){
+			logger.error("查询失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("查询失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+	
+	@HTTP(path="/edit",method=HttpMethod.PUT)
+	public RespBody<#clazzName#> edit#clazzName#(#clazzName# #instanceName#) {
+		try{
+			if(#instanceName#==null||#instanceName#.getId()==null){
+				return RespBody.fail("请求参数不正确！");
+			}
+			return RespBody.success(#instanceName#Service.saveOrUpdate(#instanceName#));
+		}catch(Exception e){
+			logger.error("查询失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("查询失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+
+	@HTTP(path="/remove",method=HttpMethod.DELETE)
+	public RespBody<Void> remove#clazzName#(#clazzName# #instanceName#) {
+		try{
+			if(#instanceName#!=null&&#instanceName#.getId()!=null)
+				#instanceName#Service.removeByCondition(#instanceName#);
+			return RespBody.success("删除成功");
+		}catch(Exception e){
+			logger.error("查询失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("查询失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+	
+	@HTTP(path="/removeRel",method=HttpMethod.DELETE)
+	public RespBody<Void> removeRel#clazzName#(#clazzName# #instanceName#,@Param(name="relId")String relId,@Param(name="prop")String prop) {
+		try{
+			#instanceName#Service.removeByCondition(#instanceName#);
+			return RespBody.success("删除关系成功");
+		}catch(Exception e){
+			logger.error("删除失败，原因："+ e.getLocalizedMessage());
+			return RespBody.fail("删除失败，原因："+ e.getLocalizedMessage());
+		}
+	}
+}

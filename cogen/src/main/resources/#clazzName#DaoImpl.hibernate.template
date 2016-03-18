@@ -1,0 +1,35 @@
+package #package#.dao.impl;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
+import com.zeus.persist.model.MarkDelete;
+import #package#.entity.#clazzName#;
+import #package#.dao.#clazzName#Dao;
+import com.zeus.persist.hibernate.QueryCondition;
+import com.zeus.persist.hibernate.HibernateBaseDaoImpl;
+
+@Repository
+public class #clazzName#DaoImpl extends HibernateBaseDaoImpl<#clazzName#,#idType#> implements #clazzName#Dao{
+
+	@Override
+	@Resource(name="sessionFactory")
+	public void setDaoSessionFactory(SessionFactory sessionFactory) {
+		super.setSessionFactory(sessionFactory);
+	}
+	
+    @Override
+    public QueryCondition createQueryCondition(#clazzName# #instanceName#) {
+        QueryCondition queryCondition = new QueryCondition(" FROM #clazzName# t where 1=1 ");
+        if(#instanceName#!=null){
+//#searchBlock#
+        }
+        if(MarkDelete.class.isAssignableFrom(#clazzName#.class)){
+			queryCondition.append(" AND isDelete = false ");
+		}
+        return queryCondition;
+    }
+    
+}
